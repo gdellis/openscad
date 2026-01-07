@@ -86,9 +86,47 @@ corner_radius = 10;
 
 5. **Export**: Go to `File > Export > Export as STL...` to save for 3D printing
 
+---
+
+## Batch Generation with Bash Script
+
+A helper script `generate_bins.sh` is provided to automatically create STL files for multiple bin sizes.
+
+### What the script does
+* Defines a list of bin specifications (outer width, outer depth, height, wall thickness, corner radius, floor thickness).
+* Loops over each specification and builds a descriptive output filename (e.g., `bin_60x40x30.stl`).
+* Calls the OpenSCAD CLI with `-D` flags to override the parameters in `simple bin.scad`.
+* Generates ready‑to‑print STL files for every entry.
+
+### Usage
+```bash
+# Make the script executable (once)
+chmod +x generate_bins.sh
+
+# Run the script – it will create several STL files in the current directory
+./generate_bins.sh
+```
+
+You can edit the `specs` array inside `generate_bins.sh` to add or remove bin sizes. Each entry follows the format:
+```
+"outer_width outer_depth height wall_thickness corner_radius floor_thickness"
+```
+
+### Example output files
+After running the script you will find files such as:
+* `bin_60x40x30.stl` – Small bin (60 × 40 × 30 mm)
+* `bin_80x60x40.stl` – Medium bin
+* `bin_100x80x50.stl` – Large bin
+* `bin_120x100x60.stl` – Extra‑large bin
+* `bin_180x120x80.stl` – Jumbo bin
+
+These STL files can be sliced directly with your favourite slicer and printed.
+
+---
+
 ## Sanity Checks
 
-The design includes built-in validation that will alert you if:
+The design includes built‑in validation that will alert you if:
 - Any dimension is zero or negative
 - Corner radius is too large for the bin dimensions
 - Wall thickness is too large for the bin dimensions
