@@ -15,9 +15,9 @@ Examples:
   ./generate_bins.py --custom 100 80 50 2 10 2 # Generate a 100x80x50 bin with custom parameters
 
 The script reads a list of specifications (width, depth, height, wall thickness,
-corner radius, floor thickness) and calls the OpenSCAD CLI for each entry.
+corner radius, floor thickness) from bin_specs.conf and calls the OpenSCAD CLI for each entry.
 
-Feel free to edit the "specs" list to add/remove sizes.
+Feel free to edit the bin_specs.conf file to add/remove sizes.
 -------------------------------------------------
 """
 
@@ -25,6 +25,10 @@ import subprocess
 import sys
 import os
 import argparse
+
+
+# Configuration file
+CONFIG_FILE = "bin_specs.conf"
 
 
 # ---- Error handling -----------------
@@ -53,15 +57,45 @@ if not check_openscad():
     sys.exit(1)
 
 
-# ---- Define the list of bin specifications -----------------
-# Format: (outer_width, outer_depth, height, wall_thickness, corner_radius, floor_thickness)
-DEFAULT_SPECS = [
-    (60, 40, 30, 1.6, 5, 1.6),  # Small bin
-    (80, 60, 40, 2, 8, 2),  # Medium bin
-    (100, 80, 50, 2.5, 10, 2.5),  # Large bin
-    (120, 100, 60, 3, 12, 3),  # Extra-large bin
-    (180, 120, 80, 3, 15, 3),  # Jumbo bin
-]
+def load_bin_specs(config_file):
+    """
+    Load bin specifications from a configuration file.
+    
+    Expected format:
+    # Comments and blank lines are ignored
+    outer_width, outer_depth, height, wall_thickness, corner_radius, floor_thickness  # Optional comment
+    
+    Returns a list of tuples containing the specifications.
+    """
+    if not os.path.isfile(config_file):
+        print(f"Error: Configuration file {config_file} not found")
+        sys.exit(1)
+    
+    specs = []
+    with open(config_file, 'r') as f:
+        for line_num, line in enumerate(f, 1):
+            line = line.strip()
+            # Skip empty lines and comments
+            if not line or line.startswith('#'):
+                continue
+            
+            # Parse the line
+            try:
+                # Split by comma and convert to float
+                values = [float(x.strip()) for x in line.split(',')]
+                if len(values) != 6:
+                    print(f"Warning: Line {line_num} in {config_file} should have 6 values, found {len(values)}")
+                    continue
+                specs.append(tuple(values))
+            except ValueError as e:
+                print(f"Warning: Invalid number format on line {line_num} in {config_file}: {line}")
+                continue
+    
+    if not specs:
+        print(f"Error: No valid bin specifications found in {config_file}")
+        sys.exit(1)
+        
+    return specs
 
 
 def generate_stl(W, D, H, WT, CR, FT):
@@ -136,10 +170,12 @@ def main():
             
     else:
         # Generate all predefined bins
-        print("Generating predefined bin sizes...")
+        print("Loading bin specifications from", CONFIG_FILE)
+        bin_specs = load_bin_specs(CONFIG_FILE)
+        print(f"Generating {len(bin_specs)} predefined bin sizes...")
         all_success = True
         
-        for spec in DEFAULT_SPECS:
+        for spec in bin_specs:
             # Unpack the spec tuple into individual variables
             W, D, H, WT, CR, FT = spec
             
