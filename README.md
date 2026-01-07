@@ -107,9 +107,9 @@ make preview
 make clean
 ```
 
-### Using Python Script (Alternative Method)
+### Using Python Script (Primary Method)
 
-The Python script provides the most flexibility with command line options:
+The Python script is now the primary and recommended way to generate STL files:
 
 ```bash
 # Generate all predefined bin sizes (defined in bin_specs.json)
@@ -137,51 +137,6 @@ Feel free to modify `bin_specs.json` to customize the predefined bin sizes witho
 
 ---
 
-## Batch Generation with Bash Script
-
-A helper script `generate_bins.sh` is provided to automatically create STL files for multiple bin sizes.
-
-### What the script does
-* Reads bin specifications from `bin_specs.json`
-* Loops over each specification and builds a descriptive output filename (e.g., `bin_60x40x30.stl`).
-* Calls the OpenSCAD CLI with `-D` flags to override the parameters in `simple bin.scad`.
-* Generates ready‑to‑print STL files for every entry.
-* Places all generated STL files in the `out` directory.
-
-### Usage
-```bash
-# Make the script executable (once)
-chmod +x generate_bins.sh
-
-# Run the script – it will create several STL files in the out directory
-./generate_bins.sh
-```
-
-You can edit the `bin_specs.json` file to add or remove bin sizes. Each entry follows the format:
-```
-{
-  "name": "Bin description",
-  "outer_width": number,
-  "outer_depth": number,
-  "height": number,
-  "wall_thickness": number,
-  "corner_radius": number,
-  "floor_thickness": number
-}
-```
-
-### Example output files
-After running the script you will find files such as:
-* `bin_60x40x30.stl` – Small bin (60 × 40 × 30 mm)
-* `bin_80x60x40.stl` – Medium bin
-* `bin_100x80x50.stl` – Large bin
-* `bin_120x100x60.stl` – Extra‑large bin
-* `bin_180x120x80.stl` – Jumbo bin
-
-These STL files can be sliced directly with your favourite slicer and printed.
-
----
-
 ## Using Makefile
 
 A Makefile is provided for easier building and management of the project. The Makefile supports:
@@ -200,7 +155,7 @@ A Makefile is provided for easier building and management of the project. The Ma
 
 ## Using Python Script
 
-The Python generation script (`generate_bins.py`) is now the recommended way to generate bins, as it works across all platforms and offers the most flexibility:
+The Python generation script (`generate_bins.py`) is the primary and recommended way to generate bins, as it works across all platforms and offers the most flexibility:
 
 * Works on Windows, macOS, and Linux
 * Supports both batch generation and custom sizing
@@ -214,6 +169,15 @@ The Python generation script (`generate_bins.py`) is now the recommended way to 
 * Python 3.x installed
 * OpenSCAD installed and in system PATH
 * All requirements listed above for the main project
+
+### Why Use the Python Script?
+
+The Python script replaces the older bash and batch scripts with a single, cross-platform solution that:
+* Works consistently across all operating systems
+* Provides better error handling and validation
+* Offers both batch generation and custom sizing options
+* Automatically organizes output in the `out` directory
+* Is more maintainable and extensible
 
 ---
 
