@@ -107,6 +107,29 @@ make preview
 make clean
 ```
 
+### Using Python Script (Alternative Method)
+
+The Python script provides the most flexibility with command line options:
+
+```bash
+# Generate all predefined bin sizes
+./generate_bins.py
+
+# Generate a custom sized bin with default parameters
+./generate_bins.py --custom 100 80 50
+
+# Generate a custom sized bin with all parameters specified
+./generate_bins.py --custom 100 80 50 2 10 2
+```
+
+Valid parameters for `--custom` are:
+- WIDTH (mm)
+- DEPTH (mm)
+- HEIGHT (mm)
+- WALL_THICKNESS (mm, default: 2.0)
+- CORNER_RADIUS (mm, default: 10.0)
+- FLOOR_THICKNESS (mm, default: 2.0)
+
 ---
 
 ## Batch Generation with Bash Script
@@ -157,6 +180,23 @@ A Makefile is provided for easier building and management of the project. The Ma
 ### Requirements for Makefile
 
 * Unix-like environment with `make` command
+* All requirements listed above for the main project
+
+---
+
+## Using Python Script
+
+The Python generation script (`generate_bins.py`) is now the recommended way to generate bins, as it works across all platforms and offers the most flexibility:
+
+* Works on Windows, macOS, and Linux
+* Supports both batch generation and custom sizing
+* Includes robust error handling
+* Can be used programmatically
+
+### Requirements for Python Script
+
+* Python 3.x installed
+* OpenSCAD installed and in system PATH
 * All requirements listed above for the main project
 
 ---
