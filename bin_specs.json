@@ -1,0 +1,49 @@
+{
+  "bins": [
+    {
+      "name": "Small bin",
+      "outer_width": 60,
+      "outer_depth": 40,
+      "height": 30,
+      "wall_thickness": 1.6,
+      "corner_radius": 5,
+      "floor_thickness": 1.6
+    },
+    {
+      "name": "Medium bin",
+      "outer_width": 80,
+      "outer_depth": 60,
+      "height": 40,
+      "wall_thickness": 2,
+      "corner_radius": 8,
+      "floor_thickness": 2
+    },
+    {
+      "name": "Large bin",
+      "outer_width": 100,
+      "outer_depth": 80,
+      "height": 50,
+      "wall_thickness": 2.5,
+      "corner_radius": 10,
+      "floor_thickness": 2.5
+    },
+    {
+      "name": "Extra-large bin",
+      "outer_width": 120,
+      "outer_depth": 100,
+      "height": 60,
+      "wall_thickness": 3,
+      "corner_radius": 12,
+      "floor_thickness": 3
+    },
+    {
+      "name": "Jumbo bin",
+      "outer_width": 180,
+      "outer_depth": 120,
+      "height": 80,
+      "wall_thickness": 3,
+      "corner_radius": 15,
+      "floor_thickness": 3
+    }
+  ]
+}

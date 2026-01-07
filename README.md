@@ -112,7 +112,7 @@ make clean
 The Python script provides the most flexibility with command line options:
 
 ```bash
-# Generate all predefined bin sizes (defined in bin_specs.conf)
+# Generate all predefined bin sizes (defined in bin_specs.json)
 ./generate_bins.py
 
 # Generate a custom sized bin with default parameters
@@ -130,7 +130,7 @@ Valid parameters for `--custom` are:
 - CORNER_RADIUS (mm, default: 10.0)
 - FLOOR_THICKNESS (mm, default: 2.0)
 
-Feel free to modify `bin_specs.conf` to customize the predefined bin sizes without editing the script.
+Feel free to modify `bin_specs.json` to customize the predefined bin sizes without editing the script.
 
 ---
 
@@ -139,7 +139,7 @@ Feel free to modify `bin_specs.conf` to customize the predefined bin sizes witho
 A helper script `generate_bins.sh` is provided to automatically create STL files for multiple bin sizes.
 
 ### What the script does
-* Reads bin specifications from `bin_specs.conf`
+* Reads bin specifications from `bin_specs.json`
 * Loops over each specification and builds a descriptive output filename (e.g., `bin_60x40x30.stl`).
 * Calls the OpenSCAD CLI with `-D` flags to override the parameters in `simple bin.scad`.
 * Generates ready‑to‑print STL files for every entry.
@@ -153,9 +153,17 @@ chmod +x generate_bins.sh
 ./generate_bins.sh
 ```
 
-You can edit the `bin_specs.conf` file to add or remove bin sizes. Each entry follows the format:
+You can edit the `bin_specs.json` file to add or remove bin sizes. Each entry follows the format:
 ```
-outer_width, outer_depth, height, wall_thickness, corner_radius, floor_thickness
+{
+  "name": "Bin description",
+  "outer_width": number,
+  "outer_depth": number,
+  "height": number,
+  "wall_thickness": number,
+  "corner_radius": number,
+  "floor_thickness": number
+}
 ```
 
 ### Example output files
@@ -194,7 +202,7 @@ The Python generation script (`generate_bins.py`) is now the recommended way to 
 * Supports both batch generation and custom sizing
 * Includes robust error handling
 * Can be used programmatically
-* Uses external configuration file for predefined bins
+* Uses external JSON configuration file for predefined bins
 
 ### Requirements for Python Script
 

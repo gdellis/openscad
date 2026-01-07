@@ -15,9 +15,9 @@ Examples:
   ./generate_bins.py --custom 100 80 50 2 10 2 # Generate a 100x80x50 bin with custom parameters
 
 The script reads a list of specifications (width, depth, height, wall thickness,
-corner radius, floor thickness) from bin_specs.conf and calls the OpenSCAD CLI for each entry.
+corner radius, floor thickness) from bin_specs.json and calls the OpenSCAD CLI for each entry.
 
-Feel free to edit the bin_specs.conf file to add/remove sizes.
+Feel free to edit the bin_specs.json file to add/remove sizes.
 -------------------------------------------------
 """
 
@@ -25,10 +25,11 @@ import subprocess
 import sys
 import os
 import argparse
+import json
 
 
 # Configuration file
-CONFIG_FILE = "bin_specs.conf"
+CONFIG_FILE = "bin_specs.json"
 
 
 # ---- Error handling -----------------
@@ -59,37 +60,60 @@ if not check_openscad():
 
 def load_bin_specs(config_file):
     """
-    Load bin specifications from a configuration file.
+    Load bin specifications from a JSON configuration file.
     
     Expected format:
-    # Comments and blank lines are ignored
-    outer_width, outer_depth, height, wall_thickness, corner_radius, floor_thickness  # Optional comment
+    {
+      "bins": [
+        {
+          "name": "Bin description",
+          "outer_width": number,
+          "outer_depth": number,
+          "height": number,
+          "wall_thickness": number,
+          "corner_radius": number,
+          "floor_thickness": number
+        },
+        ...
+      ]
+    }
     
-    Returns a list of tuples containing the specifications.
+    Returns a list of tuples containing (outer_width, outer_depth, height, wall_thickness, corner_radius, floor_thickness).
     """
     if not os.path.isfile(config_file):
         print(f"Error: Configuration file {config_file} not found")
         sys.exit(1)
     
+    try:
+        with open(config_file, 'r') as f:
+            config = json.load(f)
+    except json.JSONDecodeError as e:
+        print(f"Error: Invalid JSON in {config_file}: {e}")
+        sys.exit(1)
+    
+    if "bins" not in config:
+        print(f"Error: No 'bins' array found in {config_file}")
+        sys.exit(1)
+    
     specs = []
-    with open(config_file, 'r') as f:
-        for line_num, line in enumerate(f, 1):
-            line = line.strip()
-            # Skip empty lines and comments
-            if not line or line.startswith('#'):
-                continue
-            
-            # Parse the line
-            try:
-                # Split by comma and convert to float
-                values = [float(x.strip()) for x in line.split(',')]
-                if len(values) != 6:
-                    print(f"Warning: Line {line_num} in {config_file} should have 6 values, found {len(values)}")
-                    continue
-                specs.append(tuple(values))
-            except ValueError as e:
-                print(f"Warning: Invalid number format on line {line_num} in {config_file}: {line}")
-                continue
+    for i, bin_spec in enumerate(config["bins"]):
+        # Validate required fields
+        required_fields = ["outer_width", "outer_depth", "height", "wall_thickness", "corner_radius", "floor_thickness"]
+        missing_fields = [field for field in required_fields if field not in bin_spec]
+        if missing_fields:
+            print(f"Warning: Bin entry {i+1} missing required fields: {missing_fields}")
+            continue
+        
+        # Extract values in the expected order
+        spec_tuple = (
+            bin_spec["outer_width"],
+            bin_spec["outer_depth"],
+            bin_spec["height"],
+            bin_spec["wall_thickness"],
+            bin_spec["corner_radius"],
+            bin_spec["floor_thickness"]
+        )
+        specs.append(spec_tuple)
     
     if not specs:
         print(f"Error: No valid bin specifications found in {config_file}")
