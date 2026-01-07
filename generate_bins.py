@@ -30,6 +30,8 @@ import json
 
 # Configuration file
 CONFIG_FILE = "bin_specs.json"
+# Output directory
+OUTPUT_DIR = "out"
 
 
 # ---- Error handling -----------------
@@ -124,9 +126,13 @@ def load_bin_specs(config_file):
 
 def generate_stl(W, D, H, WT, CR, FT):
     """Generate a single STL file with given parameters."""
+    # Ensure output directory exists
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    
     # Build a clean output filename, e.g. bin_60x40x30.stl
     OUT = f"bin_{W}x{D}x{H}.stl"
-
+    OUT_PATH = os.path.join(OUTPUT_DIR, OUT)
+    
     print(f"Generating {OUT} (W={W}, D={D}, H={H})...")
 
     try:
@@ -134,7 +140,7 @@ def generate_stl(W, D, H, WT, CR, FT):
             [
                 "openscad",
                 "-o",
-                OUT,
+                OUT_PATH,
                 f"-D outer_width={W}",
                 f"-D outer_depth={D}",
                 f"-D height={H}",
@@ -188,7 +194,7 @@ def main():
         # Generate the custom bin
         success = generate_stl(W, D, H, WT, CR, FT)
         if success:
-            print(f"Custom bin {W}x{D}x{H} generated successfully.")
+            print(f"Custom bin {W}x{D}x{H} generated successfully in '{OUTPUT_DIR}' directory.")
         else:
             sys.exit(1)
             
@@ -196,7 +202,7 @@ def main():
         # Generate all predefined bins
         print("Loading bin specifications from", CONFIG_FILE)
         bin_specs = load_bin_specs(CONFIG_FILE)
-        print(f"Generating {len(bin_specs)} predefined bin sizes...")
+        print(f"Generating {len(bin_specs)} predefined bin sizes in '{OUTPUT_DIR}' directory...")
         all_success = True
         
         for spec in bin_specs:
@@ -208,7 +214,7 @@ def main():
                 all_success = False
                 
         if all_success:
-            print("All bins generated successfully.")
+            print(f"All bins generated successfully in '{OUTPUT_DIR}' directory.")
         else:
             sys.exit(1)
 

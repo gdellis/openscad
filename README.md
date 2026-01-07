@@ -113,12 +113,15 @@ The Python script provides the most flexibility with command line options:
 
 ```bash
 # Generate all predefined bin sizes (defined in bin_specs.json)
+# STL files will be placed in the 'out' directory
 ./generate_bins.py
 
 # Generate a custom sized bin with default parameters
+# STL file will be placed in the 'out' directory
 ./generate_bins.py --custom 100 80 50
 
 # Generate a custom sized bin with all parameters specified
+# STL file will be placed in the 'out' directory
 ./generate_bins.py --custom 100 80 50 2 10 2
 ```
 
@@ -143,13 +146,14 @@ A helper script `generate_bins.sh` is provided to automatically create STL files
 * Loops over each specification and builds a descriptive output filename (e.g., `bin_60x40x30.stl`).
 * Calls the OpenSCAD CLI with `-D` flags to override the parameters in `simple bin.scad`.
 * Generates ready‑to‑print STL files for every entry.
+* Places all generated STL files in the `out` directory.
 
 ### Usage
 ```bash
 # Make the script executable (once)
 chmod +x generate_bins.sh
 
-# Run the script – it will create several STL files in the current directory
+# Run the script – it will create several STL files in the out directory
 ./generate_bins.sh
 ```
 
@@ -203,6 +207,7 @@ The Python generation script (`generate_bins.py`) is now the recommended way to 
 * Includes robust error handling
 * Can be used programmatically
 * Uses external JSON configuration file for predefined bins
+* Automatically creates `out` directory for generated STL files
 
 ### Requirements for Python Script
 
