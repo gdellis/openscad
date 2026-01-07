@@ -8,7 +8,7 @@ Usage:
   ./generate_bins.py                          # Generate predefined bin sizes
   ./generate_bins.py --custom WIDTH DEPTH HEIGHT [WALL_THICKNESS CORNER_RADIUS FLOOR_THICKNESS]
                                               # Generate a custom sized bin
-  
+
 Examples:
   ./generate_bins.py                          # Generate all predefined bins
   ./generate_bins.py --custom 100 80 50       # Generate a 100x80x50 bin with default parameters
@@ -63,7 +63,7 @@ if not check_openscad():
 def load_bin_specs(config_file):
     """
     Load bin specifications from a JSON configuration file.
-    
+
     Expected format:
     {
       "bins": [
@@ -79,24 +79,25 @@ def load_bin_specs(config_file):
         ...
       ]
     }
-    
-    Returns a list of tuples containing (outer_width, outer_depth, height, wall_thickness, corner_radius, floor_thickness).
+
+    Returns a list of tuples containing
+    (outer_width, outer_depth, height, wall_thickness, corner_radius, floor_thickness).
     """
     if not os.path.isfile(config_file):
         print(f"Error: Configuration file {config_file} not found")
         sys.exit(1)
-    
+
     try:
         with open(config_file, 'r') as f:
             config = json.load(f)
     except json.JSONDecodeError as e:
         print(f"Error: Invalid JSON in {config_file}: {e}")
         sys.exit(1)
-    
+
     if "bins" not in config:
         print(f"Error: No 'bins' array found in {config_file}")
         sys.exit(1)
-    
+
     specs = []
     for i, bin_spec in enumerate(config["bins"]):
         # Validate required fields
@@ -105,7 +106,7 @@ def load_bin_specs(config_file):
         if missing_fields:
             print(f"Warning: Bin entry {i+1} missing required fields: {missing_fields}")
             continue
-        
+
         # Extract values in the expected order
         spec_tuple = (
             bin_spec["outer_width"],
@@ -116,11 +117,11 @@ def load_bin_specs(config_file):
             bin_spec["floor_thickness"]
         )
         specs.append(spec_tuple)
-    
+
     if not specs:
         print(f"Error: No valid bin specifications found in {config_file}")
         sys.exit(1)
-        
+
     return specs
 
 
@@ -128,11 +129,11 @@ def generate_stl(W, D, H, WT, CR, FT):
     """Generate a single STL file with given parameters."""
     # Ensure output directory exists
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    
+
     # Build a clean output filename, e.g. bin_60x40x30.stl
     OUT = f"bin_{W}x{D}x{H}.stl"
     OUT_PATH = os.path.join(OUTPUT_DIR, OUT)
-    
+
     print(f"Generating {OUT} (W={W}, D={D}, H={H})...")
 
     try:
@@ -167,22 +168,22 @@ def main():
              "WIDTH DEPTH HEIGHT [WALL_THICKNESS CORNER_RADIUS FLOOR_THICKNESS]. "
              "Missing parameters will use default values."
     )
-    
+
     args = parser.parse_args()
 
     if args.custom is not None:
         # Handle custom bin generation
         num_custom_params = len(args.custom)
-        
+
         if num_custom_params < 3:
             print("Error: At least 3 parameters required for --custom option")
             print("Usage: --custom WIDTH DEPTH HEIGHT [WALL_THICKNESS CORNER_RADIUS FLOOR_THICKNESS]")
             sys.exit(1)
-        
+
         if num_custom_params > 6:
             print("Error: Maximum 6 parameters allowed for --custom option")
             sys.exit(1)
-        
+
         # Extract provided parameters
         W = args.custom[0]
         D = args.custom[1]
@@ -190,29 +191,29 @@ def main():
         WT = args.custom[3] if num_custom_params > 3 else 2.0  # Default wall thickness
         CR = args.custom[4] if num_custom_params > 4 else 10.0  # Default corner radius
         FT = args.custom[5] if num_custom_params > 5 else 2.0  # Default floor thickness
-        
+
         # Generate the custom bin
         success = generate_stl(W, D, H, WT, CR, FT)
         if success:
             print(f"Custom bin {W}x{D}x{H} generated successfully in '{OUTPUT_DIR}' directory.")
         else:
             sys.exit(1)
-            
+
     else:
         # Generate all predefined bins
         print("Loading bin specifications from", CONFIG_FILE)
         bin_specs = load_bin_specs(CONFIG_FILE)
         print(f"Generating {len(bin_specs)} predefined bin sizes in '{OUTPUT_DIR}' directory...")
         all_success = True
-        
+
         for spec in bin_specs:
             # Unpack the spec tuple into individual variables
             W, D, H, WT, CR, FT = spec
-            
+
             success = generate_stl(W, D, H, WT, CR, FT)
             if not success:
                 all_success = False
-                
+
         if all_success:
             print(f"All bins generated successfully in '{OUTPUT_DIR}' directory.")
         else:
