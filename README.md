@@ -23,7 +23,7 @@ This OpenSCAD project generates a parametric storage bin that can be easily cust
 
 ```openscad
 outer_width = 120;      // Outer width in mm
-outer_depth = 80;       // Outer depth in mm  
+outer_depth = 80;       // Outer depth in mm
 height = 50;            // Total height in mm
 wall_thickness = 2;     // Wall thickness in mm
 corner_radius = 10;     // Corner radius in mm
@@ -86,27 +86,6 @@ corner_radius = 10;
 
 5. **Export**: Go to `File > Export > Export as STL...` to save for 3D printing
 
-### Using Makefile (Alternative Method)
-
-If you have `make` installed, you can use the provided Makefile for easier building:
-
-```bash
-# Build a bin with default parameters
-make
-
-# Build a bin with custom parameters
-make OUTER_WIDTH=100 OUTER_DEPTH=100 HEIGHT=60
-
-# Batch generate all predefined bins
-make batch
-
-# Preview in OpenSCAD GUI
-make preview
-
-# Clean generated STL files
-make clean
-```
-
 ### Using Python Script (Primary Method)
 
 The Python script is now the primary and recommended way to generate STL files:
@@ -134,26 +113,6 @@ Valid parameters for `--custom` are:
 - FLOOR_THICKNESS (mm, default: 2.0)
 
 Feel free to modify `bin_specs.json` to customize the predefined bin sizes without editing the script.
-
----
-
-## Using Makefile
-
-A Makefile is provided for easier building and management of the project. The Makefile supports:
-
-* Building individual bins with custom parameters
-* Batch generation of all predefined bins
-* Previewing models in OpenSCAD GUI
-* Cleaning generated files
-
-### Requirements for Makefile
-
-* Unix-like environment with `make` command
-* All requirements listed above for the main project
-
----
-
-## Using Python Script
 
 The Python generation script (`generate_bins.py`) is the primary and recommended way to generate bins, as it works across all platforms and offers the most flexibility:
 
