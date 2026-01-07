@@ -1,3 +1,8 @@
+---
+name: markdown-rules
+globs: *.{md,mdx}
+---
+
 # Project Rules and Conventions
 
 This project uses several tools to maintain code quality and consistency:
@@ -18,11 +23,13 @@ The markdownlint configuration is located at `.continue/rules/markdownlint-confi
 ### Usage
 
 To check Markdown files for issues:
+
 ```bash
 markdownlint README.md
 ```
 
 To automatically fix basic formatting issues:
+
 ```bash
 markdownlint --fix README.md
 ```
@@ -34,6 +41,7 @@ Use `/markdownlint` in Continue to get help with using markdownlint on this proj
 ## Other Quality Tools
 
 This project also uses:
+
 - EditorConfig for consistent indentation and line endings
 - JSON for structured configuration files
 - Pre-commit hooks for basic validation

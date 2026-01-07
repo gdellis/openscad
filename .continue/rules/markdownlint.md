@@ -1,4 +1,3 @@
-```md
 ---
 invokable: true
 ---
@@ -23,4 +22,3 @@ Common options:
 --output  Save results to a file
 
 For full documentation, visit: https://github.com/DavidAnson/markdownlint
-```

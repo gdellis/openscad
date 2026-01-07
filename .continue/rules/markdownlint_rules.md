@@ -1,4 +1,3 @@
-```md
 ---
 invokable: true
 ---
@@ -33,4 +32,3 @@ markdownlint --fix --output report.txt *.md        # Fix all md files and save r
 For full documentation, visit: https://github.com/DavidAnson/markdownlint
 
 Always validate fixes by reviewing the changes before committing.
-```

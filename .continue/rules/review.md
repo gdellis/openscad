@@ -1,4 +1,3 @@
-```md
 ---
 invokable: true
 ---
@@ -15,4 +14,3 @@ Review this code for potential issues, including:
 - README.md accuracy and completeness
 
 Provide specific, actionable feedback for improvements.
-```

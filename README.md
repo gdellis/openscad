@@ -47,6 +47,7 @@ convexity = 10;         // Preview rendering quality
 ### Customization Examples
 
 **Small Parts Bin:**
+
 ```openscad
 outer_width = 60;
 outer_depth = 40;
@@ -56,6 +57,7 @@ corner_radius = 5;
 ```
 
 **Large Storage Bin:**
+
 ```openscad
 outer_width = 180;
 outer_depth = 120;
@@ -65,6 +67,7 @@ corner_radius = 15;
 ```
 
 **Heavy-Duty Bin:**
+
 ```openscad
 outer_width = 100;
 outer_depth = 100;
@@ -105,6 +108,7 @@ The Python script is now the primary and recommended way to generate STL files:
 ```
 
 Valid parameters for `--custom` are:
+
 - WIDTH (mm)
 - DEPTH (mm)
 - HEIGHT (mm)
@@ -116,33 +120,34 @@ Feel free to modify `bin_specs.json` to customize the predefined bin sizes witho
 
 The Python generation script (`generate_bins.py`) is the primary and recommended way to generate bins, as it works across all platforms and offers the most flexibility:
 
-* Works on Windows, macOS, and Linux
-* Supports both batch generation and custom sizing
-* Includes robust error handling
-* Can be used programmatically
-* Uses external JSON configuration file for predefined bins
-* Automatically creates `out` directory for generated STL files
+- Works on Windows, macOS, and Linux
+- Supports both batch generation and custom sizing
+- Includes robust error handling
+- Can be used programmatically
+- Uses external JSON configuration file for predefined bins
+- Automatically creates `out` directory for generated STL files
 
 ### Requirements for Python Script
 
-* Python 3.x installed
-* OpenSCAD installed and in system PATH
-* All requirements listed above for the main project
+- Python 3.x installed
+- OpenSCAD installed and in system PATH
+- All requirements listed above for the main project
 
 ### Why Use the Python Script?
 
 The Python script replaces the older bash and batch scripts with a single, cross-platform solution that:
-* Works consistently across all operating systems
-* Provides better error handling and validation
-* Offers both batch generation and custom sizing options
-* Automatically organizes output in the `out` directory
-* Is more maintainable and extensible
+- Works consistently across all operating systems
+- Provides better error handling and validation
+- Offers both batch generation and custom sizing options
+- Automatically organizes output in the `out` directory
+- Is more maintainable and extensible
 
 ---
 
 ## Sanity Checks
 
 The design includes built‑in validation that will alert you if:
+
 - Any dimension is zero or negative
 - Corner radius is too large for the bin dimensions
 - Wall thickness is too large for the bin dimensions
@@ -162,6 +167,7 @@ The design includes built‑in validation that will alert you if:
 ### Inner Dimensions Calculation
 
 The script automatically calculates inner dimensions:
+
 - `inner_width = outer_width - 2 × wall_thickness`
 - `inner_depth = outer_depth - 2 × wall_thickness`
 - `inner_height = height - floor_thickness`
