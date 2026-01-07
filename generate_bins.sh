@@ -12,6 +12,20 @@
 # Feel free to edit the "specs" array to add/remove sizes.
 # -------------------------------------------------
 
+# ---- Error handling -----------------
+# Check if OpenSCAD is installed
+if ! command -v openscad &> /dev/null; then
+    echo "Error: OpenSCAD is not installed or not in PATH"
+    exit 1
+fi
+
+# Check if SCAD file exists
+SCAD_FILE="simple bin.scad"
+if [ ! -f "$SCAD_FILE" ]; then
+    echo "Error: $SCAD_FILE not found"
+    exit 1
+fi
+
 # ---- Define the list of bin specifications -----------------
 # Format:  "outer_width outer_depth height wall_thickness corner_radius floor_thickness"
 specs=(
@@ -21,8 +35,6 @@ specs=(
     "120 100 60 3 12 3"    # Extra‑large bin
     "180 120 80 3 15 3"    # Jumbo bin
 )
-
-SCAD_FILE="simple bin.scad"
 
 # ---- Loop over each spec and generate the STL ---------------
 for spec in "${specs[@]}"; do

@@ -3,22 +3,22 @@
 // Author: Glenn Ellis
 // Date: 2025-01-06
 
-// Exposed parameters:
-//   outer_width       - total outer width of the bin (mm)
-//   outer_depth       - total outer depth of the bin (mm)
-//   height            - total height of the bin (mm)
-//   wall_thickness    - thickness of the walls (mm)
-//   corner_radius     - radius of the rounded corners (mm)
-//   floor_thickness   - thickness of the floor (mm)
-//   convexity         - convexity parameter for preview rendering
+// Exposed parameters with units and recommended ranges:
+//   outer_width       - total outer width of the bin (mm) [40-200+]
+//   outer_depth       - total outer depth of the bin (mm) [40-200+]
+//   height            - total height of the bin (mm) [20-100+]
+//   wall_thickness    - thickness of the walls (mm) [1.2-5+]
+//   corner_radius     - radius of the rounded corners (mm) [2-30+]
+//   floor_thickness   - thickness of the floor (mm) [1.2-5+]
+//   convexity         - convexity parameter for preview rendering [10 is safe default]
 
-outer_width = 120;
-outer_depth = 80;
-height = 50;
-wall_thickness = 2;
-corner_radius = 10;
-floor_thickness = 2;
-convexity = 10;       // Safe default for preview
+outer_width = 120;      // Outer width in mm
+outer_depth = 80;       // Outer depth in mm
+height = 50;            // Total height in mm
+wall_thickness = 2;     // Wall thickness in mm
+corner_radius = 10;     // Corner radius in mm
+floor_thickness = 2;    // Floor thickness in mm
+convexity = 10;         // Safe default for preview
 
 // Derived dimensions
 inner_width = outer_width - 2 * wall_thickness;
