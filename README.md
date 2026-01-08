@@ -13,6 +13,8 @@ This OpenSCAD project generates a parametric storage bin that can be easily cust
 - **Built-in Sanity Checks**: Validates parameters to prevent impossible geometry
 - **Optimized for 3D Printing**: Print-ready design with proper wall thickness
 - **Customizable Wall & Floor Thickness**: Adjust strength as needed
+- **Stacking Lip Support**: Optional stacking lip for secure stacking
+- **Improved Performance**: Efficient hull() implementation for faster rendering
 
 ## Requirements
 
@@ -25,9 +27,10 @@ This OpenSCAD project generates a parametric storage bin that can be easily cust
 outer_width = 120;      // Outer width in mm
 outer_depth = 80;       // Outer depth in mm
 height = 50;            // Total height in mm
-wall_thickness = 2;     // Wall thickness in mm
-corner_radius = 10;     // Corner radius in mm
-floor_thickness = 2;    // Floor thickness in mm
+wall_thickness = 2;     // Wall thickness in mm (min 1.2mm for 0.4mm nozzle)
+corner_radius = 10;     // Corner radius in mm (larger radii print more reliably)
+floor_thickness = 2;    // Floor thickness in mm (min 1.2mm for 0.4mm nozzle)
+stacking_lip = 2;       // Stacking lip height in mm (0 to disable)
 convexity = 10;         // Preview rendering quality
 ```
 
@@ -40,9 +43,10 @@ convexity = 10;         // Preview rendering quality
 | `outer_width` | Overall width of the bin (mm) | 40-200+ |
 | `outer_depth` | Overall depth of the bin (mm) | 40-200+ |
 | `height` | Total height of the bin (mm) | 20-100+ |
-| `wall_thickness` | Thickness of walls (mm) | 1.2-5+ |
-| `corner_radius` | Radius of rounded corners (mm) | 2-30+ |
-| `floor_thickness` | Thickness of the floor (mm) | 1.2-5+ |
+| `wall_thickness` | Thickness of walls (mm) | 1.2-5+ (min 1.2mm for 0.4mm nozzle) |
+| `corner_radius` | Radius of rounded corners (mm) | 2-30+ (larger radii print more reliably) |
+| `floor_thickness` | Thickness of the floor (mm) | 1.2-5+ (min 1.2mm for 0.4mm nozzle) |
+| `stacking_lip` | Height of stacking lip (mm) | 0-10 (0 to disable) |
 
 ### Customization Examples
 
@@ -54,6 +58,8 @@ outer_depth = 40;
 height = 30;
 wall_thickness = 1.6;
 corner_radius = 5;
+floor_thickness = 1.6;
+stacking_lip = 0;  // No stacking lip
 ```
 
 **Large Storage Bin:**
@@ -64,6 +70,8 @@ outer_depth = 120;
 height = 80;
 wall_thickness = 3;
 corner_radius = 15;
+floor_thickness = 3;
+stacking_lip = 3;  // 3mm stacking lip
 ```
 
 **Heavy-Duty Bin:**
@@ -75,6 +83,7 @@ height = 60;
 wall_thickness = 4;
 floor_thickness = 4;
 corner_radius = 10;
+stacking_lip = 2;  // 2mm stacking lip
 ```
 
 ## How to Use
@@ -151,7 +160,8 @@ The design includes built‑in validation that will alert you if:
 - Any dimension is zero or negative
 - Corner radius is too large for the bin dimensions
 - Wall thickness is too large for the bin dimensions
-- Any other impossible geometry is detected
+- Wall or floor thickness is below minimum 3D printing requirements (1.2mm for 0.4mm nozzle)
+- Stacking lip dimensions are unreasonable
 
 ## 3D Printing Tips
 
@@ -160,7 +170,8 @@ The design includes built‑in validation that will alert you if:
 - **Wall Thickness**: Minimum 1.2mm for 0.4mm nozzle (3 perimeters)
 - **Infill**: 15-20% infill is usually sufficient for storage bins
 - **Material**: PLA, PETG, or ABS all work well
-- **Corner Radius**: Larger radii (10mm+) print more reliably than small sharp corners
+- **Corner Radius**: Larger radii (8mm+) print more reliably than small sharp corners
+- **Stacking**: Enable stacking lip for bins that need to stack securely
 
 ## Design Details
 
@@ -174,6 +185,6 @@ The script automatically calculates inner dimensions:
 
 ### Module Structure
 
-- **RoundedRectangle**: 2D rounded rectangle generator
-- **Bin**: Main bin geometry using constructive solid geometry
-- **SanityCheck**: Parameter validation module
+- **RoundedRectangle**: 2D rounded rectangle generator (using hull for performance)
+- **Bin**: Main bin geometry using constructive solid geometry with optional stacking lip
+- **SanityCheck**: Parameter validation module with 3D printing constraints

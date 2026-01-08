@@ -2,8 +2,8 @@
 *.scad.backup
 *.scad~
 
-# STL files (uncomment if you want to ignore generated STLs)
-# *.stl
+# STL files
+*.stl
 
 # Backup files
 *~

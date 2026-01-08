@@ -7,7 +7,8 @@
       "height": 30,
       "wall_thickness": 1.6,
       "corner_radius": 5,
-      "floor_thickness": 1.6
+      "floor_thickness": 1.6,
+      "stacking_lip": 0
     },
     {
       "name": "Medium bin",
@@ -16,7 +17,8 @@
       "height": 40,
       "wall_thickness": 2,
       "corner_radius": 8,
-      "floor_thickness": 2
+      "floor_thickness": 2,
+      "stacking_lip": 1
     },
     {
       "name": "Large bin",
@@ -25,7 +27,8 @@
       "height": 50,
       "wall_thickness": 2.5,
       "corner_radius": 10,
-      "floor_thickness": 2.5
+      "floor_thickness": 2.5,
+      "stacking_lip": 2
     },
     {
       "name": "Extra-large bin",
@@ -34,7 +37,8 @@
       "height": 60,
       "wall_thickness": 3,
       "corner_radius": 12,
-      "floor_thickness": 3
+      "floor_thickness": 3,
+      "stacking_lip": 2
     },
     {
       "name": "Jumbo bin",
@@ -43,7 +47,8 @@
       "height": 80,
       "wall_thickness": 3,
       "corner_radius": 15,
-      "floor_thickness": 3
+      "floor_thickness": 3,
+      "stacking_lip": 3
     }
   ]
 }

@@ -74,14 +74,15 @@ def load_bin_specs(config_file):
           "height": number,
           "wall_thickness": number,
           "corner_radius": number,
-          "floor_thickness": number
+          "floor_thickness": number,
+          "stacking_lip": number
         },
         ...
       ]
     }
 
     Returns a list of tuples containing
-    (outer_width, outer_depth, height, wall_thickness, corner_radius, floor_thickness).
+    (outer_width, outer_depth, height, wall_thickness, corner_radius, floor_thickness, stacking_lip).
     """
     if not os.path.isfile(config_file):
         print(f"Error: Configuration file {config_file} not found")
@@ -101,11 +102,16 @@ def load_bin_specs(config_file):
     specs = []
     for i, bin_spec in enumerate(config["bins"]):
         # Validate required fields
-        required_fields = ["outer_width", "outer_depth", "height", "wall_thickness", "corner_radius", "floor_thickness"]
+        required_fields = ["outer_width", "outer_depth", "height", "wall_thickness", "corner_radius", "floor_thickness", "stacking_lip"]
         missing_fields = [field for field in required_fields if field not in bin_spec]
         if missing_fields:
             print(f"Warning: Bin entry {i+1} missing required fields: {missing_fields}")
-            continue
+            # Set default stacking_lip to 0 if missing
+            if "stacking_lip" in missing_fields:
+                bin_spec["stacking_lip"] = 0
+                missing_fields.remove("stacking_lip")
+            if missing_fields:
+                continue
 
         # Extract values in the expected order
         spec_tuple = (
@@ -114,7 +120,8 @@ def load_bin_specs(config_file):
             bin_spec["height"],
             bin_spec["wall_thickness"],
             bin_spec["corner_radius"],
-            bin_spec["floor_thickness"]
+            bin_spec["floor_thickness"],
+            bin_spec["stacking_lip"]
         )
         specs.append(spec_tuple)
 
@@ -125,7 +132,7 @@ def load_bin_specs(config_file):
     return specs
 
 
-def generate_stl(W, D, H, WT, CR, FT):
+def generate_stl(W, D, H, WT, CR, FT, SL=0):
     """Generate a single STL file with given parameters."""
     # Ensure output directory exists
     os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -148,6 +155,7 @@ def generate_stl(W, D, H, WT, CR, FT):
                 f"-D wall_thickness={WT}",
                 f"-D corner_radius={CR}",
                 f"-D floor_thickness={FT}",
+                f"-D stacking_lip={SL}",
                 SCAD_FILE,
             ],
             check=True,
@@ -165,7 +173,7 @@ def main():
         nargs="*",
         type=float,
         help="Generate a custom sized bin. Provide 3, 4, 5, or 6 values: "
-             "WIDTH DEPTH HEIGHT [WALL_THICKNESS CORNER_RADIUS FLOOR_THICKNESS]. "
+             "WIDTH DEPTH HEIGHT [WALL_THICKNESS CORNER_RADIUS FLOOR_THICKNESS STACKING_LIP]. "
              "Missing parameters will use default values."
     )
 
@@ -180,8 +188,8 @@ def main():
             print("Usage: --custom WIDTH DEPTH HEIGHT [WALL_THICKNESS CORNER_RADIUS FLOOR_THICKNESS]")
             sys.exit(1)
 
-        if num_custom_params > 6:
-            print("Error: Maximum 6 parameters allowed for --custom option")
+        if num_custom_params > 7:
+            print("Error: Maximum 7 parameters allowed for --custom option")
             sys.exit(1)
 
         # Extract provided parameters
@@ -191,9 +199,10 @@ def main():
         WT = args.custom[3] if num_custom_params > 3 else 2.0  # Default wall thickness
         CR = args.custom[4] if num_custom_params > 4 else 10.0  # Default corner radius
         FT = args.custom[5] if num_custom_params > 5 else 2.0  # Default floor thickness
+        SL = args.custom[6] if num_custom_params > 6 else 0.0  # Default stacking lip
 
         # Generate the custom bin
-        success = generate_stl(W, D, H, WT, CR, FT)
+        success = generate_stl(W, D, H, WT, CR, FT, SL)
         if success:
             print(f"Custom bin {W}x{D}x{H} generated successfully in '{OUTPUT_DIR}' directory.")
         else:
@@ -208,9 +217,9 @@ def main():
 
         for spec in bin_specs:
             # Unpack the spec tuple into individual variables
-            W, D, H, WT, CR, FT = spec
+            W, D, H, WT, CR, FT, SL = spec
 
-            success = generate_stl(W, D, H, WT, CR, FT)
+            success = generate_stl(W, D, H, WT, CR, FT, SL)
             if not success:
                 all_success = False
 
